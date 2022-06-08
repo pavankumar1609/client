@@ -1,4 +1,3 @@
-import Announcement from "../components/Announcement";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Categories from "../components/Categories";
@@ -9,7 +8,6 @@ import Footer from "../components/Footer";
 function Home() {
   return (
     <div>
-      <Announcement />
       <Navbar />
       <Sidebar />
       <Categories />

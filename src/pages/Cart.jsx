@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import PayButton from "./PayButton";
@@ -21,84 +20,84 @@ function Cart() {
   return (
     <Container>
       <Navbar />
-      <Announcement />
-      <Wrapper>
-        <Title>YOUR BAG</Title>
-        <Top>
-          <TopButton>
-            <NavLink style={{ color: "black" }} to="/">
-              CONTINUE SHOPPING
+      {!cart.quantity && (
+        <Wrapper>
+          <EmptyCart>
+            <Title>Shopping Cart</Title>
+            <p>Your cart is currently empty.</p>
+            <NavLink to="/" style={{ color: "black" }}>
+              ← Start Shopping
             </NavLink>
-          </TopButton>
-          <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
-            <TopText>Your Wishlist (0)</TopText>
-          </TopTexts>
-          <TopButton type="filled">ADD PRODUCT TO CHECKOUT</TopButton>
-        </Top>
-        <Bottom>
-          <Info>
-            {cart.products.map((product) => (
-              <Product key={product._id + Math.random()}>
-                <ProductDetail>
-                  <Image src={product.img} />
-                  <Details>
-                    <ProductName>
-                      <b>Product:</b> {product.title}
-                    </ProductName>
-                    <ProductId>
-                      <b>ID:</b> {product._id}
-                    </ProductId>
-                    <ProductColor color={product.color} />
-                    <ProductSize>
-                      <b>Size:</b> {product.size}
-                    </ProductSize>
-                  </Details>
-                </ProductDetail>
-                <PriceDetail>
-                  <ProductAmountContainer>
-                    <span style={{ fontSize: 20 }}>QTY: </span>
-                    <ProductAmount>{product.quantity}</ProductAmount>
-                  </ProductAmountContainer>
-                  <ProductPrice>
-                    ₹ {product.price * product.quantity}
-                  </ProductPrice>
-                  <DeleteButton onClick={() => handleDelete(product)}>
-                    Delete
-                  </DeleteButton>
-                </PriceDetail>
-              </Product>
-            ))}
-            <Hr />
-          </Info>
-          <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-            <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>₹ {cart.total}</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>₹ 5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>₹ -5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>₹ {cart.total}</SummaryItemPrice>
-            </SummaryItem>
-            {user ? (
-              !!cart.quantity && <PayButton cartItems={cart.products} />
-            ) : (
-              <Button>
-                <NavLink to="/login">Login to Check Out</NavLink>
-              </Button>
-            )}
-          </Summary>
-        </Bottom>
-      </Wrapper>
+          </EmptyCart>
+        </Wrapper>
+      )}
+      {!!cart.quantity && (
+        <Wrapper>
+          <Title style={{ marginBottom: 20 }}>SHOPPING CART</Title>
+          <Bottom>
+            <Info>
+              {cart.products.map((product) => (
+                <Product key={product._id + Math.random()}>
+                  <ProductDetail>
+                    <Image src={product.img} />
+                    <Details>
+                      <ProductName>
+                        <b>Product:</b> {product.title}
+                      </ProductName>
+                      <ProductId>
+                        <b>ID:</b> {product._id}
+                      </ProductId>
+                      <ProductColor color={product.color} />
+                      <ProductSize>
+                        <b>Size:</b> {product.size}
+                      </ProductSize>
+                    </Details>
+                  </ProductDetail>
+                  <PriceDetail>
+                    <ProductAmountContainer>
+                      <span style={{ fontSize: 20 }}>QTY: </span>
+                      <ProductAmount>{product.quantity}</ProductAmount>
+                    </ProductAmountContainer>
+                    <ProductPrice>
+                      ₹ {product.price * product.quantity}
+                    </ProductPrice>
+                    <DeleteButton onClick={() => handleDelete(product)}>
+                      Delete
+                    </DeleteButton>
+                  </PriceDetail>
+                </Product>
+              ))}
+              <Hr />
+              <OrderContainer>
+                <Top>
+                  <TopButton>
+                    <NavLink style={{ color: "black" }} to="/">
+                      CONTINUE SHOPPING
+                    </NavLink>
+                  </TopButton>
+                </Top>
+                <Summary>
+                  <SummaryItem>
+                    <SummaryItemText>Subtotal</SummaryItemText>
+                    <SummaryItemPrice>₹ {cart.total}</SummaryItemPrice>
+                  </SummaryItem>
+                  <TaxSummary>
+                    Taxes and shipping calculated at checkout
+                  </TaxSummary>
+                  {user ? (
+                    !!cart.quantity && <PayButton cartItems={cart.products} />
+                  ) : (
+                    <Button>
+                      <NavLink to="/login">Login to Check Out</NavLink>
+                    </Button>
+                  )}
+                </Summary>
+              </OrderContainer>
+            </Info>
+          </Bottom>
+        </Wrapper>
+      )}
+      <Hr />
       <Footer />
     </Container>
   );
@@ -121,7 +120,7 @@ const Title = styled.h1`
 const Top = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 20px;
 `;
 
@@ -135,13 +134,15 @@ const TopButton = styled.button`
   ${smMobile({ padding: "5px", fontSize: "12px" })}
 `;
 
-const TopTexts = styled.div``;
-
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0px 10px;
-  ${tablet({ display: "none" })}
+const EmptyCart = styled.div`
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  * {
+    margin: 20px;
+  }
 `;
 
 const Bottom = styled.div`
@@ -223,17 +224,7 @@ const Hr = styled.hr`
   height: 1px;
 `;
 
-const Summary = styled.div`
-  flex: 1;
-  border: 0.5px solid lightgray;
-  border-radius: 10px;
-  padding: 20px;
-  height: 75vh;
-`;
-
-const SummaryTitle = styled.h1`
-  font-weight: 200;
-`;
+const Summary = styled.div``;
 
 const SummaryItem = styled.div`
   margin: 30px 0px;
@@ -243,9 +234,24 @@ const SummaryItem = styled.div`
   font-size: ${(props) => props.type === "total" && "24px"};
 `;
 
-const SummaryItemText = styled.span``;
+const TaxSummary = styled.div`
+  margin-bottom: 10px;
+`;
 
-const SummaryItemPrice = styled.span``;
+const SummaryItemText = styled.span`
+  font-size: 30px;
+`;
+
+const SummaryItemPrice = styled.span`
+  font-size: 30px;
+`;
+
+const OrderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 170px 20px 20px;
+`;
 
 const DeleteButton = styled.button`
   border: none;
@@ -264,6 +270,7 @@ const Button = styled.button`
   color: white;
   font-weight: 600;
   cursor: pointer;
+  border-radius: 10px;
 `;
 
 const NavLink = styled(Link)`
