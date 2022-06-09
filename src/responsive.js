@@ -16,6 +16,14 @@ export function mobile(props) {
   `;
 }
 
+export function lgMobile(props) {
+  return css`
+    @media only screen and (max-width: 650px) {
+      ${props}
+    }
+  `;
+}
+
 export function tablet(props) {
   return css`
     @media only screen and (max-width: 800px) {

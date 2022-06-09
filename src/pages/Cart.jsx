@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import PayButton from "./PayButton";
 import { removeProduct } from "../redux/cartRedux";
 import { useDispatch } from "react-redux";
-import { mobile, smMobile, tablet } from "../responsive";
+import { mobile, smMobile, lgMobile, tablet } from "../responsive";
 
 function Cart() {
   const cart = useSelector((state) => state.cart);
@@ -158,7 +158,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
+  ${lgMobile({ flexDirection: "column" })}
 `;
 
 const ProductDetail = styled.div`
@@ -196,8 +196,10 @@ const PriceDetail = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  margin-right: 30px;
+  ${lgMobile({ alignItems: "center", fontSize: "10px" })}
 `;
 
 const ProductAmountContainer = styled.div`
@@ -250,13 +252,14 @@ const OrderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0px 170px 20px 20px;
+  margin-inline: 30px;
+  ${lgMobile({ flexDirection: "column" })}
 `;
 
 const DeleteButton = styled.button`
   border: none;
   padding: 5px 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   cursor: pointer;
   background-color: red;
   color: white;
